@@ -1,20 +1,13 @@
 "use strict";
 
-const gitApi = "https://api.github.com/users/";
+const gitAPI = "https://api.github.com/users/";
 const card = document.createElement("div");
 const main = document.getElementById("main");
 const input = document.getElementById("input");
 const form = document.getElementById("form");
 
-/*const getJSON = function (url, errorMsg = "Something went wrong") {
-  return fetch(url).then((response) => {
-    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
-
-    return response.json();
-  });
-}; */
 async function getUser(username) {
-  const resp = await fetch(gitApi + username);
+  const resp = await fetch(gitAPI + username);
   const respData = await resp.json();
   if (respData.message === "Not Found") {
     noUser();
@@ -23,6 +16,8 @@ async function getUser(username) {
     getRepos(username);
   }
 }
+// ===== create user card =====
+
 function createUserCard(user) {
   const card = `
     <div class="card">
@@ -44,13 +39,18 @@ function createUserCard(user) {
     `;
   main.innerHTML = card;
 }
+
+// ===== get API and convert to json =====
+
 async function getRepos(username) {
-  const resp = await fetch(gitApi + username + "/repos");
+  const resp = await fetch(gitAPI + username + "/repos");
   const respData = await resp.json();
   addReposToCard(respData);
 }
 
-function addReposToCard(repos) {
+// ===== add repos to the card =====
+
+const addReposToCard = function (repos) {
   const repoEl = document.getElementById("repos");
 
   repos.forEach((repo) => {
@@ -63,11 +63,13 @@ function addReposToCard(repos) {
 
     repoEl.appendChild(elem);
   });
-}
-function noUser() {
+};
+// ===== no user found =====
+
+const noUser = function () {
   const title = `<h3>User Not Found</h3>`;
   main.innerHTML = title;
-}
+};
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
